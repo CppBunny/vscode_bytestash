@@ -4,7 +4,7 @@
   "description": "Upload snippets to ByteStash from VS Code",
   "repository": "https://github.com/CppBunny/vscode_bytestash",
   "publisher": "cppbunny",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -18,14 +18,34 @@
       {
         "command": "bytestash.pushAll",
         "category": "ByteStash",
-        "title": "Push"
+        "title": "Push to ByteStash"
       },
       {
         "command": "bytestash.pushSelected",
         "category": "ByteStash",
-        "title": "Push Selected"
+        "title": "Push Selected to ByteStash"
       }
     ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "bytestash.pushAll",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "bytestash.pushSelected",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "bytestash.pushAll",
+          "group": "navigation"
+        }
+      ]
+    },
     "configuration": {
       "title": "ByteStash",
       "properties": {

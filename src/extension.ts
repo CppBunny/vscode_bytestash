@@ -1,6 +1,10 @@
+import { readFileSync } from 'fs';
 import * as vscode from 'vscode';
 
-async function pushSnippet(content: string | undefined, file: string | undefined, language: string | undefined) {
+async function pushSnippet(content: string | undefined, file: string | undefined, language: string) {
+	// Languages available in ByteStash, use plaintext if unavailable
+	const available_languages = ['javascript', 'typescript', 'html', 'css', 'php', 'wat', 'c', 'cpp', 'csharp', 'rust', 'go', 'java', 'kotlin', 'scala', 'groovy', 'python', 'ruby', 'perl', 'lua', 'bash', 'powershell', 'bat', 'sql', 'mongodb', 'markdown', 'yaml', 'json', 'xml', 'toml', 'terraform', 'dockerfile', 'kubernetes', 'swift', 'r', 'julia', 'dart', 'elm', 'apex', 'solidity', 'vyper', 'latex', 'matlab', 'graphql', 'cypher', 'plaintext'];
+
 	const config = vscode.workspace.getConfiguration('bytestash');
 	const config_url = config.url;
 	const config_key = config.key;
@@ -8,20 +12,17 @@ async function pushSnippet(content: string | undefined, file: string | undefined
 	const config_fileNameAsTitle = config.filenameAsTitle;
 	const config_public = config.public;
 
-	if(config_url === null || config_url === undefined)
-	{
+	if (config_url === null || config_url === undefined) {
 		vscode.window.showInformationMessage('ByteStash URL was not configured!');
 		return;
 	}
 
-	if(config_key === null || config_key === undefined)
-	{
+	if (config_key === null || config_key === undefined) {
 		vscode.window.showInformationMessage('ByteStash API key was not configured!');
 		return;
 	}
 
-	if(content === null || content === undefined || content === '')
-	{
+	if (content === null || content === undefined || content === '') {
 		vscode.window.showInformationMessage('Unable to find any content to upload!');
 		return;
 	}
@@ -52,7 +53,7 @@ async function pushSnippet(content: string | undefined, file: string | undefined
 		{
 			file_name: file,
 			code: content,
-			language: language
+			language: language in available_languages ? language : 'plaintext'
 		}
 	];
 
@@ -75,26 +76,24 @@ async function pushSnippet(content: string | undefined, file: string | undefined
 		headers: { 'Content-Type': 'application/json', 'x-api-key': config_key }
 	});
 
-	if(response.ok)
-	{
+	if (response.ok) {
 		vscode.window.showInformationMessage(`Snippet uploaded successfully!`);
 	}
 	else {
 		response.text().then(function (text) {
 			vscode.window.showInformationMessage(text);
 		});
-		
+
 	}
 }
 
 function getDocument() {
 	const editor = vscode.window.activeTextEditor;
-	
-	if(editor)
-	{
+
+	if (editor) {
 		return editor.document;
 	}
-	
+
 	return undefined;
 }
 
@@ -111,21 +110,27 @@ function getSelection() {
 function getContent() {
 	const document = getDocument();
 
-	if(document)
-	{
+	if (document) {
 		return document.getText();
 	}
 
 	return undefined;
 }
 
+function getFileContent(resource: vscode.Uri) {
+	return Buffer.from(readFileSync(resource.path)).toString();
+}
+
+function extractFileName(file: string) {
+	const nameArray = file.split('/');
+	return nameArray[nameArray.length - 1];
+}
+
 function getFileName() {
 	const document = getDocument();
 
-	if(document)
-	{
-		const nameArray = document.fileName.split('/');
-		return nameArray[nameArray.length - 1];
+	if (document) {
+		return extractFileName(document.fileName);
 	}
 
 	return undefined;
@@ -138,7 +143,7 @@ function getFileLanguage() {
 		return document.languageId;
 	}
 
-	return undefined;
+	return 'plaintext';
 }
 
 function getSelectionContent() {
@@ -153,8 +158,15 @@ function getSelectionContent() {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-	const disposable_all = vscode.commands.registerCommand('bytestash.pushAll', () => {
-		pushSnippet(getContent(), getFileName(), getFileLanguage());
+	const disposable_all = vscode.commands.registerCommand('bytestash.pushAll', (resource: vscode.Uri) => {
+		if (resource) {
+			vscode.workspace.openTextDocument(resource).then(document => {
+				pushSnippet(getFileContent(resource), extractFileName(resource.path), document.languageId);
+			});
+		}
+		else {
+			pushSnippet(getContent(), getFileName(), getFileLanguage());
+		}
 	});
 
 	const disposable_selection = vscode.commands.registerCommand('bytestash.pushSelected', () => {
@@ -164,4 +176,4 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable_all);
 	context.subscriptions.push(disposable_selection);
 }
-export function deactivate() {}
+export function deactivate() { }

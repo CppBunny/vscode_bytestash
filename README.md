@@ -5,10 +5,10 @@ This extension allows you to upload snippets to ByteStash directly from VS Code.
 ## Features
 
 ### Push
-Pushes the content of the current file.
+Pushes the content of the current file. Available as a command, from the file context menu and from the editor title bar.
 
 ### Push Selected
-Pushes the selected content.
+Pushes the selected content. Available as a command and from the editor context menu.
 
 ### Quick Mode
 Enabling quick mode creates a new snippet without asking for user input (such as for naming). Title and language will be based on information extracted from VS Code. 
