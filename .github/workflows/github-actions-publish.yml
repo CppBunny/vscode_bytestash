@@ -19,5 +19,6 @@ jobs:
           fileName: 'bytestash-*.vsix'
           tarBall: false
           zipBall: false
+          latest: true
       - name: Testing
         run: ls
