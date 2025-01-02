@@ -1,0 +1,23 @@
+name: Publish Extension
+on:
+  # release:
+  #   types:
+  #     - published
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+      - name: Install vsce
+        run: npm i -g vsce
+      - uses: robinraju/release-downloader@v1
+        with:
+          fileName: 'bytestash-*.vsix'
+          tarBall: false
+          zipBall: false
+      - name: Testing
+        run: ls
