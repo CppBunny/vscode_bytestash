@@ -1,0 +1,77 @@
+{
+  "name": "bytestash",
+  "displayName": "ByteStash",
+  "description": "Upload snippets to ByteStash from VS Code",
+  "repository": "https://github.com/CppBunny/vscode_bytestash",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "bytestash.pushAll",
+        "category": "ByteStash",
+        "title": "Push"
+      },
+      {
+        "command": "bytestash.pushSelected",
+        "category": "ByteStash",
+        "title": "Push Selected"
+      }
+    ],
+    "configuration": {
+      "title": "ByteStash",
+      "properties": {
+        "bytestash.url": {
+          "type": "string",
+          "default": "http://localhost:5000",
+          "description": "URL of your ByteStash instance"
+        },
+        "bytestash.key": {
+          "type": "string",
+          "description": "API key of your Bytestash instance"
+        },
+        "bytestash.quick": {
+          "type": "boolean",
+          "description": "Upload directly without asking for input"
+        },
+        "bytestash.filenameAsTitle": {
+          "type": "boolean",
+          "description": "Use file name as title instead of a random string"
+        },
+        "bytestash.public": {
+          "type": "boolean",
+          "description": "Make uploaded snippets public"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.96.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.17.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "typescript-eslint": "^8.19.0"
+  }
+}
