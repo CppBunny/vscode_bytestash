@@ -3,6 +3,7 @@
   "displayName": "ByteStash",
   "description": "Upload snippets to ByteStash from VS Code",
   "repository": "https://github.com/CppBunny/vscode_bytestash",
+  "publisher": "cppbunny",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.96.0"
