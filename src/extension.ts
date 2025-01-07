@@ -53,7 +53,7 @@ async function pushSnippet(content: string | undefined, file: string | undefined
 		{
 			file_name: file,
 			code: content,
-			language: language in available_languages ? language : 'plaintext'
+			language: available_languages.includes(language) ? language : 'plaintext'
 		}
 	];
 
