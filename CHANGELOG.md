@@ -4,6 +4,10 @@ All notable changes to the "bytestash" extension will be documented in this file
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.4]
+
+- Fixed an issue where all snippets would be uploaded as plaintext
+
 ## [0.0.3]
 
 - Add push button to file context menu
